@@ -7,6 +7,8 @@ const db = process.env.DATABASE_URL;
 
 mongoose.connect(db).then(() => console.log("database connected succesful"));
 
-app.listen(8000, () => {
+const port = process.env.PORT || 10000;
+
+app.listen(port, () => {
   console.log("welcome to medium clone in node app");
 });
