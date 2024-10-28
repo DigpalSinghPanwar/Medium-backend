@@ -10,9 +10,13 @@ exports.postBlog = async (req, res) => {
       });
     }
     const blog = await Blog.create(req.body);
+    const newBlog = await Blog.findById(blog._id).populate({
+      path: "userId",
+      select: "name about",
+    });
     res.status(201).json({
       status: "Success",
-      data: { blog },
+      data: { newBlog },
     });
   } catch (error) {
     return res.status(400).json({
@@ -25,7 +29,6 @@ exports.postBlog = async (req, res) => {
 exports.updateBlog = async (req, res) => {
   try {
     const { title, content, userId, _id } = req.body;
-    console.log(req.body);
 
     if (!title || !content || !userId || !_id) {
       return res.status(400).json({
@@ -37,7 +40,10 @@ exports.updateBlog = async (req, res) => {
       { _id },
       { title, content },
       { new: true }
-    );
+    ).populate({
+      path: "userId",
+      select: "name about",
+    });
     res.status(201).json({
       status: "Success",
       data: { blog },
@@ -53,7 +59,6 @@ exports.updateBlog = async (req, res) => {
 exports.getBlog = async (req, res) => {
   try {
     const { id } = req.params;
-    console.log(id);
 
     if (!id) {
       return res.status(400).json({
@@ -61,10 +66,11 @@ exports.getBlog = async (req, res) => {
         message: "Provide details related to content",
       });
     }
-    console.log("id received");
 
-    const blog = await Blog.findById({ _id: id });
-    console.log("Blog", blog);
+    const blog = await Blog.findById({ _id: id }).populate({
+      path: "userId",
+      select: "name about",
+    });
 
     res.status(200).json({
       status: "Success",
@@ -80,7 +86,10 @@ exports.getBlog = async (req, res) => {
 
 exports.getAllBlogs = async (req, res) => {
   try {
-    const blogs = await Blog.find();
+    const blogs = await Blog.find().populate({
+      path: "userId",
+      select: "name about",
+    });
     res.status(200).json({
       status: "Success",
       result: blogs.length,

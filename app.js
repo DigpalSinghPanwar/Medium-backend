@@ -19,15 +19,15 @@ app.use((req, res, next) => {
   next();
 });
 
-// app.use("/api/v1", (req, res, next) => {
-//   res.status(200).json({
-//     status: "success",
-//     message: "welcome to our app",
-//   });
-// });
-
 app.use("/api/v1/user", authRouter);
 
 app.use("/api/v1/blog", blogRouter);
+
+app.use("/", (req, res, next) => {
+  res.status(200).json({
+    status: "success",
+    message: "welcome to my medium app",
+  });
+});
 
 module.exports = app;
